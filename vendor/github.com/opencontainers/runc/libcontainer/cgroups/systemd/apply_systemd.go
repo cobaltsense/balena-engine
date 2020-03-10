@@ -268,11 +268,17 @@ func (m *Manager) Apply(pid int) error {
 			newProp("BlockIOWeight", uint64(c.Resources.BlkioWeight)))
 	}
 
+	// TasksAccounting is turned on by default, and this means that all
+	// units contained in the slice and parent slices will also have it on
+	// So set the "TasksMax" to infinity independently.
 	if c.Resources.PidsLimit > 0 {
 		properties = append(properties,
 			newProp("TasksAccounting", true),
 			newProp("TasksMax", uint64(c.Resources.PidsLimit)))
+	} else {
+			properties = append(properties, newProp("TasksMax", "infinity"))
 	}
+
 
 	// We have to set kernel memory here, as we can't change it once
 	// processes have been attached to the cgroup.

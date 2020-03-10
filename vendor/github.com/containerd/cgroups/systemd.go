@@ -118,6 +118,8 @@ func (s *SystemdController) Create(path string, resources *specs.LinuxResources)
 		properties = append(properties, newProperty("Delegate", true))
 	}
 
+	properties = append(properties, newProperty("TasksMax", uint64(34768)))
+
 	ch := make(chan string)
 	_, err = conn.StartTransientUnit(name, "replace", properties, ch)
 	if err != nil {
